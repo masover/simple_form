@@ -23,7 +23,7 @@ module SimpleForm
         unless options[:html].key?(:novalidate)
           options[:html][:novalidate] = !SimpleForm.browser_validations
         end
-        options[:html][:class] = [SimpleForm.form_class, simple_form_css_class(record, options)].compact.join(" ")
+        options[:html][:class] = [SimpleForm.form_class, simple_form_css_class(record, options)].flatten.compact.join(" ")
 
         with_simple_form_field_error_proc do
           form_for(record, options, &block)
@@ -62,7 +62,7 @@ module SimpleForm
         else
           record = record.last if record.is_a?(Array)
           action = record.respond_to?(:persisted?) && record.persisted? ? :edit : :new
-          as ? "#{action}_#{as}" : dom_class(record, action)
+          as ? ["#{action}_#{as}",as] : [dom_class(record, action),dom_class(record)]
         end
       end
     end
